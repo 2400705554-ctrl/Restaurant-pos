@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SUUK Restaurant Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="login-overlay" class="login-overlay">
+      <div class="login-box">
+        <div class="brand-block login-brand">
+          <img class="brand-icon" src="assets/suuk logo.jpeg" alt="SUUK logo" />
+          <div>
+            <h1>SUUK Restaurant</h1>
+            <p>Staff operations access</p>
+          </div>
+        </div>
+        <form id="login-form" class="login-form">
+          <div class="field">
+            <label>Username</label>
+            <input type="text" id="login-username" value="admin" required />
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <input type="password" id="login-password" value="admin123" required />
+          </div>
+          <label class="remember-device-row" for="remember-device">
+            <input id="remember-device" type="checkbox" checked />
+            <span>Remember this device</span>
+          </label>
+          <button class="primary wide" type="submit">Sign in to operations</button>
+        </form>
+        <p class="login-hint">Internal access for restaurant staff and managers.</p>
+      </div>
+    </div>
+
+    <div class="app-shell" id="app-shell">
+      <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+      <aside class="sidebar">
+        <div class="brand-block">
+          <img class="brand-icon" src="assets/suuk logo.jpeg" alt="SUUK logo" />
+          <div>
+            <h1>SUUK Restaurant</h1>
+            <p>Multi-branch operations</p>
+          </div>
+        </div>
+
+        <nav class="main-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-section="dashboard">
+            <span>⌂</span>
+            Dashboard
+          </button>
+          <button class="nav-item" data-section="sales">
+            <span>＋</span>
+            POS / New Order
+          </button>
+          <button class="nav-item" data-section="menu-categories">
+            <span>🍴</span>
+            Menu &amp; Categories
+          </button>
+          <button class="nav-item" data-section="inventory">
+            <span>▤</span>
+            Inventory
+          </button>
+          <button class="nav-item" data-section="vendors">
+            <span>♙</span>
+            Suppliers
+          </button>
+          <button class="nav-item" data-section="customers">
+            <span>♙</span>
+            Guests
+          </button>
+          <button class="nav-item" data-section="delivery">
+            <span>➤</span>
+            Delivery
+          </button>
+          <button class="nav-item" data-section="management">
+            <span>⚙</span>
+            Staff & Settings
+          </button>
+          <button class="nav-item" data-section="accounts">
+            <span>▥</span>
+            Reports
+          </button>
+        </nav>
+        <button class="secondary small-logout sidebar-logout" id="logout-button" type="button">Logout</button>
+      </aside>
+
+      <main class="content-panel">
+        <header class="topbar">
+          <div class="topbar-heading">
+            <div class="mobile-topbar-row">
+              <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false">☰</button>
+              <div class="mobile-brand">
+                <img src="assets/suuk logo.jpeg" alt="SUUK logo" />
+                <strong>SUUK Restaurant</strong>
+              </div>
+            </div>
+            <div class="topbar-title">
+              <p class="eyebrow">SUUK Restaurant</p>
+              <h2 id="page-title">Dashboard</h2>
+            </div>
+          </div>
+          <div class="topbar-meta">
+            <div class="branch-selector-wrap multi-branch-only" id="branch-selector-wrap" hidden>
+              <label for="current-branch">Current Branch</label>
+              <select id="current-branch"></select>
+            </div>
+            <button class="secondary small" id="theme-toggle" type="button" aria-pressed="false">☾ Dark mode</button>
+            <button class="pill pending-deliveries-pill" id="pending-deliveries-pill" type="button" aria-label="Open pending deliveries"><span class="status-dot"></span>Pending deliveries: <strong id="pending-deliveries-badge">0</strong></button>
+            <button class="pill delivered-pill" id="delivered-pill" type="button" aria-label="Open delivered orders"><span class="status-dot"></span>Delivered: <strong id="delivered-badge">0</strong></button>
+          </div>
+        </header>
+
+        <section id="dashboard" class="module-section active">
+          <div class="dashboard-welcome">
+            <div>
+              <p class="eyebrow">Restaurant overview</p>
+              <h3>Good <span id="dashboard-greeting-period">morning</span>, <span id="dashboard-greeting-name">Admin</span></h3>
+              <p class="section-note" id="dashboard-current-date">Here’s what’s happening at your restaurant today.</p>
+            </div>
+            <button class="primary" type="button" data-open-section="sales">＋ <span>New Order</span></button>
+          </div>
+          <div class="dashboard-stats">
+            <article class="dashboard-stat stat-revenue" data-dashboard-section="sales" role="button" tabindex="0">
+              <span class="dashboard-stat-icon">UGX</span>
+              <span class="label">Today's Sales</span>
+              <strong id="dashboard-total-revenue">UGX 0</strong>
+              <small>Completed orders today</small>
+            </article>
+            <article class="dashboard-stat stat-orders" data-dashboard-section="sales" role="button" tabindex="0">
+              <span class="dashboard-stat-icon">▤</span>
+              <span class="label">Orders Today</span>
+              <strong id="dashboard-today-orders">0</strong>
+              <small>Today's recorded transactions</small>
+            </article>
+            <article class="dashboard-stat stat-pending" data-dashboard-section="delivery" role="button" tabindex="0">
+              <span class="dashboard-stat-icon">◷</span>
+              <span class="label">Orders in Progress</span>
+              <strong id="dashboard-pending-orders">0</strong>
+              <small>Open orders and active deliveries</small>
+            </article>
+          </div>
+          <div class="dashboard-panels">
+            <article class="panel-card dashboard-activity">
+              <div class="panel-head">
+                <div><h3>Today's Service Orders</h3><p class="section-note">Live transactions by service type</p></div>
+              </div>
+              <div class="dashboard-order-cards">
+                <article class="dashboard-order-card dine-in">
+                  <div class="dashboard-order-card-head"><h4>Dine in</h4><span id="dashboard-dine-in-count">0</span></div>
+                  <div id="dashboard-dine-in-orders" class="dashboard-order-list" aria-live="polite"></div>
+                </article>
+                <article class="dashboard-order-card takeaway">
+                  <div class="dashboard-order-card-head"><h4>Takeaway</h4><span id="dashboard-takeaway-count">0</span></div>
+                  <div id="dashboard-takeaway-orders" class="dashboard-order-list" aria-live="polite"></div>
+                </article>
+                <article class="dashboard-order-card delivery">
+                  <div class="dashboard-order-card-head"><h4>Delivery</h4><span id="dashboard-service-delivery-count">0</span></div>
+                  <div id="dashboard-service-delivery-orders" class="dashboard-order-list" aria-live="polite"></div>
+                </article>
+              </div>
+            </article>
+            <article class="panel-card dashboard-sales-overview">
+              <div class="panel-head"><div><h3>Sales Overview</h3><p class="section-note" id="dashboard-chart-caption">Monthly sales overview</p></div><strong class="chart-total" id="dashboard-chart-total">UGX 0</strong></div>
+              <div id="dashboard-chart" class="sales-chart"></div>
+            </article>
+            <article class="panel-card dashboard-weekly-sales">
+              <div class="panel-head"><div><h3>Weekly Sales</h3><p class="section-note" id="dashboard-weekly-caption">Sales by day · last 7 days</p></div><strong class="chart-total" id="dashboard-weekly-total">UGX 0</strong></div>
+              <div id="dashboard-weekly-chart" class="weekly-sales-chart"></div>
+            </article>
+            <article class="panel-card dashboard-popular">
+              <div class="panel-head"><div><h3>Popular Menu Items</h3><p class="section-note">Best performers by units sold</p></div>              <button class="text-button" type="button" data-open-section="menu-categories">View menu</button></div>
+              <div id="dashboard-top-products" class="dashboard-top-products"></div>
+            </article>
+            <article class="panel-card dashboard-kitchen">
+              <div class="panel-head"><div><h3>Order Queue</h3><p class="section-note">Orders that need attention</p></div><button class="text-button" type="button" data-open-section="sales">View sales</button></div>
+              <div id="dashboard-kitchen-queue" class="dashboard-queue-list"></div>
+            </article>
+            <article class="panel-card dashboard-recent-orders">
+              <div class="panel-head"><div><h3 id="dashboard-recent-title">Recent Orders</h3><p class="section-note">Latest customer orders</p></div><button class="text-button" id="dashboard-recent-view-all" type="button" data-open-section="sales">View all</button></div>
+              <div id="dashboard-recent-sales" class="list-table"></div>
+            </article>
+          </div>
+          <div class="dashboard-hidden-data" aria-hidden="true">
+            <div id="live-transactions"></div>
+            <span id="dashboard-today-sales">UGX 0</span><span id="dashboard-today-purchases">UGX 0</span>
+            <span id="dashboard-total-expenses">UGX 0</span><span id="dashboard-net-profit">UGX 0</span>
+            <span id="dashboard-recent-total"></span>
+            <span id="live-transactions-date"></span><div id="dashboard-summary"></div>
+          </div>
+        </section>
+
+        <section id="kitchen-display" class="module-section" hidden>
+          <header class="workspace-heading"><div><h2>Order Fulfillment</h2><p>Track and manage active customer orders through service.</p></div></header>
+          <div class="kitchen-display-filters">
+            <label class="kitchen-order-filter">All Orders <select id="kitchen-order-filter" aria-label="Filter fulfillment orders"><option value="">All Orders</option><option value="queued">Queued</option><option value="preparing">Preparing</option><option value="ready">Ready</option><option value="served">Completed</option></select></label>
+            <div id="kitchen-status-counts" class="kitchen-status-counts"></div>
+          </div>
+          <div class="panel-card kitchen-board-panel">
+            <div class="panel-head"><div><h3>Fulfillment Orders</h3><p class="section-note">Orders are updated live as their status changes.</p></div><button class="secondary small" id="open-kitchen-ticket-composer" type="button">＋ New order</button><span class="muted" id="kitchen-ticket-count">0 active</span></div>
+            <div id="kitchen-ticket-board" class="kitchen-ticket-grid"></div>
+          </div>
+          <div id="kitchen-ticket-composer" class="kitchen-ticket-composer" hidden>
+            <div class="panel-card">
+              <div class="panel-head"><h3>New Order Task</h3><span class="muted">Internal order</span></div>
+              <form id="kitchen-ticket-form">
+                <div class="form-grid">
+                  <div class="field"><label for="kitchen-menu-item">Menu item</label><select id="kitchen-menu-item" required></select></div>
+                  <div class="field small"><label for="kitchen-item-quantity">Quantity</label><input id="kitchen-item-quantity" type="number" min="0.001" step="0.001" value="1" required /></div>
+                  <div class="field"><label for="kitchen-item-notes">Item notes</label><input id="kitchen-item-notes" maxlength="240" placeholder="No onions, allergy note..." /></div>
+                </div>
+                <div class="action-row"><button class="secondary" id="kitchen-add-item" type="button">Add item</button></div>
+                <div id="kitchen-draft-items" class="kitchen-draft-items"><p class="empty-state">Add menu items to this order.</p></div>
+                <div class="field kitchen-order-notes"><label for="kitchen-ticket-notes">Order notes</label><textarea id="kitchen-ticket-notes" rows="2" maxlength="500" placeholder="Service notes for the fulfillment team"></textarea></div>
+                <button class="primary" type="submit">Send order</button>
+                <button class="secondary" id="cancel-kitchen-ticket" type="button">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section id="sales" class="module-section">
+          <header class="workspace-heading sales-heading">
+            <div><h2>New Order</h2><p>Take dine-in, takeaway and delivery orders.</p></div>
+            <span class="sales-cashier-avatar" aria-hidden="true">SU</span>
+          </header>
+          <div class="sales-order-mode" role="group" aria-label="Order type">
+            <button class="sales-mode active" type="button" data-order-mode="dine-in" aria-pressed="true">♧ <span>Dine in</span></button>
+            <button class="sales-mode" type="button" data-order-mode="takeaway" aria-pressed="false">▣ <span>Takeaway</span></button>
+            <button class="sales-mode" type="button" data-order-mode="delivery" aria-pressed="false">➤ <span>Delivery</span></button>
+            <label class="sales-top-search" for="sales-product-search">⌕ <input type="search" id="sales-product-search" list="sales-product-options" placeholder="Search menu items..." autocomplete="off" /><datalist id="sales-product-options"></datalist></label>
+          </div>
+          <div class="sales-workspace-grid">
+            <div class="sales-menu-browser">
+              <div class="sales-menu-toolbar">
+                <label class="sales-menu-search" for="sales-menu-search">⌕ <input type="search" id="sales-menu-search" placeholder="Search menu items..." /></label>
+                <label class="sales-menu-category"><span class="sr-only">Menu category</span><select id="sales-menu-category"><option value="*">All Categories</option></select></label>
+              </div>
+              <div class="sales-menu-content">
+                <aside id="sales-menu-categories" class="sales-category-list" aria-label="Menu categories"></aside>
+                <div id="sales-menu-products" class="sales-menu-products"></div>
+              </div>
+            </div>
+            <div class="sales-order-panel" id="sales-order-panel">
+              <div class="sales-legacy-fields">
+                <div class="form-grid">
+                  <div class="field"><label>Guest</label><select id="sales-customer" aria-label="Order guest"></select></div>
+                  <div class="field"><label>Attendant</label><select id="sales-cashier" aria-label="Order attendant"></select></div>
+                  <div class="field"><label>Product</label><select id="sales-product"></select></div>
+                  <div class="sales-payment-state" hidden aria-hidden="true">
+                    <select id="sales-payment-method"></select>
+                    <div class="field payment-detail-field" id="pesapal-payment-details" hidden>
+                      <input type="tel" id="pesapal-customer-phone" autocomplete="tel" />
+                    </div>
+                    <div class="field payment-detail-field" id="mobile-money-details" hidden>
+                      <select id="mobile-money-account"></select>
+                      <input type="text" id="mobile-money-payer-name" />
+                      <input type="tel" id="mobile-money-payer-phone" />
+                      <input type="text" id="mobile-money-reference" />
+                      <textarea id="mobile-money-notes" rows="2"></textarea>
+                    </div>
+                    <div class="field payment-detail-field" id="credit-payment-details" hidden>
+                      <input type="text" id="credit-customer-name" />
+                      <input type="tel" id="credit-customer-phone" />
+                      <input type="number" id="credit-limit" min="0" />
+                      <input type="date" id="credit-due-date" />
+                      <textarea id="credit-notes" rows="2"></textarea>
+                    </div>
+                    <div class="field payment-detail-field" id="other-payment-details" hidden>
+                      <input type="text" id="other-payment-reference" />
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Discount (UGX)</label>
+                  <input type="number" id="sales-discount" min="0" value="0" />
+                </div>
+                <div class="field delivery-request-field">
+                  <label class="checkbox-label"><input type="checkbox" id="sales-requires-delivery" /> Requires delivery</label>
+                </div>
+                <div class="field delivery-request-field" id="sales-delivery-details" hidden>
+                  <label>Delivery Guest Name</label>
+                  <input type="text" id="sales-delivery-customer-name" placeholder="Type guest name" />
+                </div>
+                <div class="field delivery-request-field" id="sales-delivery-email-field" hidden>
+                  <label>Guest Email</label>
+                  <input type="email" id="sales-delivery-customer-email" placeholder="customer@example.com" />
+                </div>
+                <div class="field delivery-request-field" id="sales-delivery-address-field" hidden>
+                  <label>Delivery Address</label>
+                  <input type="text" id="sales-delivery-address" placeholder="Kampala, Nakawa" />
+                </div>
+                <div class="field small delivery-request-field" id="sales-delivery-fee-field" hidden>
+                  <label>Delivery Fee (UGX)</label>
+                  <input type="number" id="sales-delivery-fee" min="0" value="0" />
+                </div>
+              </div>
+              <div class="action-row">
+                <button class="primary" id="add-sale-item" type="button">Add Item</button>
+                <button class="secondary" id="clear-sales-draft" type="button">Clear</button>
+              </div>
+              <aside class="sales-current-order">
+                <div class="sales-current-order-heading"><h3>Current Order</h3><span class="muted" id="sale-status-tag">Draft</span></div>
+                <div id="sales-cart" class="cart-table"></div>
+                <div class="totals-box sales-totals">
+                  <div class="total-row"><span>Subtotal</span><strong id="sales-subtotal">UGX 0</strong></div>
+                  <div class="total-row"><span>Discount</span><strong id="sales-discount-total">UGX 0</strong></div>
+                  <div class="total-row" id="sales-tax-row" hidden><span>Tax</span><strong id="sales-tax-total">UGX 0</strong></div>
+                  <div class="total-row grand"><span>Total Payable (UGX)</span><strong id="sales-grand-total">UGX 0</strong></div>
+                </div>
+                <div class="sales-payment-actions">
+                  <button class="pesapal-pay-button" id="pay-with-pesapal" type="button" disabled>
+                    <span class="payment-button-copy"><strong>▯&nbsp; Pay with Pesapal</strong><small>MTN MoMo · Airtel Money · Card</small></span>
+                    <strong id="pesapal-pay-total">UGX 0</strong>
+                  </button>
+                  <button class="cash-pay-button" id="pay-with-cash" type="button" disabled>
+                    <span>▣&nbsp; Cash Payment (Tender &amp; Till)</span>
+                    <strong id="cash-pay-total">UGX 0</strong>
+                  </button>
+                  <button class="sales-hidden-checkout" id="complete-sale" type="button" hidden>Checkout</button>
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <div class="card-grid single-col">
+            <div class="panel-card" id="customer-editor-panel">
+              <div class="panel-head">
+                <h3>Receipt Preview</h3>
+                <div class="receipt-print-controls">
+                  <select id="receipt-paper-size" aria-label="Receipt paper size">
+                    <option value="thermal">Thermal 80mm</option>
+                    <option value="a4">A4</option>
+                  </select>
+                  <button class="secondary" id="print-receipt" type="button">Print Receipt</button>
+                </div>
+              </div>
+              <pre id="receipt-preview" class="receipt-box">No sale completed yet.</pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="invoices" class="module-section" hidden>
+          <div class="card-grid two-col">
+            <div class="panel-card">
+              <div class="panel-head">
+                <div>
+                  <h3>Latest Invoice</h3>
+                  <p class="section-note">Most recent completed sale</p>
+                </div>
+              </div>
+              <div id="invoice-latest-details" class="totals-box invoice-latest-details">
+                <div class="empty-state">No completed sales to invoice yet.</div>
+              </div>
+            </div>
+            <div class="panel-card summary-card">
+              <div class="panel-head"><h3>Invoice Summary</h3></div>
+              <div class="totals-box">
+                <div class="total-row"><span>Completed Invoices</span><strong id="invoice-count">0</strong></div>
+                <div class="total-row grand"><span>Total Invoiced</span><strong id="invoice-total">UGX 0</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-grid single-col">
+            <div class="panel-card">
+              <div class="panel-head">
+                <div>
+                  <h3>Invoice History</h3>
+                  <p class="section-note" id="invoice-list-count"></p>
+                </div>
+                <span class="list-total" id="invoice-list-total">UGX 0</span>
+                <input class="inline-search" id="invoice-search" type="search" placeholder="Search invoice or customer" />
+              </div>
+              <div id="invoice-list" class="list-table"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="quotations" class="module-section" hidden>
+          <div class="card-grid two-col">
+            <div class="panel-card">
+              <div class="panel-head"><h3>Create Quotation</h3><span class="muted">No stock impact</span></div>
+              <form id="quotation-form">
+                <div class="form-grid">
+                  <div class="field"><label for="quotation-customer">Customer</label><select id="quotation-customer" required></select></div>
+                  <div class="field small"><label for="quotation-date">Quotation Date</label><input type="date" id="quotation-date" required /></div>
+                  <div class="field small"><label for="quotation-expiry">Valid Until</label><input type="date" id="quotation-expiry" required /></div>
+                  <div class="field"><label for="quotation-product">Product / Service</label><select id="quotation-product"></select></div>
+                  <div class="field small"><label for="quotation-qty">Quantity <span id="quotation-quantity-unit">(piece)</span></label><input type="number" id="quotation-qty" min="1" value="1" /></div>
+                  <div class="field small"><label for="quotation-price">Unit Price (UGX)</label><input type="number" id="quotation-price" min="0" value="0" /></div>
+                  <div class="field small"><label for="quotation-discount">Discount (UGX)</label><input type="number" id="quotation-discount" min="0" value="0" /></div>
+                  <div class="field small"><label for="quotation-tax">Tax / VAT (%)</label><input type="number" id="quotation-tax" min="0" value="0" /></div>
+                  <div class="field"><label for="quotation-notes">Notes / Terms</label><textarea id="quotation-notes" rows="2"></textarea></div>
+                </div>
+                <div class="action-row"><button class="secondary" type="button" id="add-quotation-item">Add Item</button><button class="primary" type="submit">Save Draft</button><button class="secondary" type="button" id="clear-quotation">Clear</button></div>
+              </form>
+            </div>
+            <div class="panel-card summary-card"><div class="panel-head"><h3>Quotation Summary</h3></div><div id="quotation-cart" class="cart-table"></div><div class="totals-box"><div class="total-row"><span>Subtotal</span><strong id="quotation-subtotal">UGX 0</strong></div><div class="total-row"><span>Discount</span><strong id="quotation-discount-total">UGX 0</strong></div><div class="total-row"><span>Tax</span><strong id="quotation-tax-total">UGX 0</strong></div><div class="total-row grand"><span>Total</span><strong id="quotation-total">UGX 0</strong></div></div></div>
+          </div>
+          <div class="card-grid single-col"><div class="panel-card"><div class="panel-head"><div><h3>View Quotations</h3><p class="section-note" id="quotation-count"></p></div><span class="list-total" id="quotation-list-total">UGX 0</span><input class="inline-search" id="quotation-search" type="search" placeholder="Search quotation or customer" /></div><div id="quotation-list" class="list-table"></div></div></div>
+        </section>
+
+        <section id="purchases" class="module-section">
+          <div class="card-grid two-col">
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>New Purchase</h3>
+              </div>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label>Vendor</label>
+                  <select id="purchase-vendor"></select>
+                </div>
+                <div class="field">
+                  <label>Product</label>
+                  <input type="search" id="purchase-product-search" list="purchase-product-options" placeholder="Search product by name, SKU, or barcode" autocomplete="off" />
+                  <datalist id="purchase-product-options"></datalist>
+                  <select id="purchase-product"></select>
+                </div>
+                <div class="field barcode-field">
+                  <label for="purchase-barcode">Barcode scanner</label>
+                  <input type="text" id="purchase-barcode" placeholder="Scan barcode / SKU and press Enter" autocomplete="off" />
+                  <button class="secondary small" id="purchase-scan-focus" type="button">Scan Barcode</button>
+                </div>
+                <div class="field small">
+                  <label>Qty <span id="purchase-quantity-unit">(piece)</span></label>
+                  <input type="number" id="purchase-qty" min="1" value="1" />
+                </div>
+                <div class="field small">
+                  <label for="purchase-unit">Unit of measure</label>
+                  <input type="text" id="purchase-unit" value="piece" readonly />
+                  <small>Set the unit in Inventory to change it for this product.</small>
+                </div>
+                <div class="field small">
+                  <label>Buying Price</label>
+                  <input type="number" id="purchase-price" min="0" value="0" />
+                </div>
+                <div class="field small">
+                  <label>Selling Price</label>
+                  <input type="number" id="purchase-selling-price" min="0" value="0" />
+                </div>
+                <div class="field">
+                  <label>Expiry Date (optional)</label>
+                  <input type="date" id="purchase-expiry-date" />
+                </div>
+              </div>
+
+              <div class="action-row">
+                <button class="primary" id="add-purchase-item" type="button">Add Purchase Item</button>
+              </div>
+            </div>
+
+            <div class="panel-card summary-card">
+              <div class="panel-head">
+                <h3>Purchase Summary</h3>
+              </div>
+              <div id="purchase-cart" class="cart-table"></div>
+              <div class="totals-box">
+                <div class="total-row grand"><span>Total Purchase</span><strong id="purchase-grand-total">UGX 0</strong></div>
+              </div>
+              <div class="action-stack">
+                <button class="primary wide" id="complete-purchase" type="button">Record Purchase</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-grid single-col">
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Purchase History</h3>
+                <span class="list-total" id="purchase-history-total">UGX 0</span>
+                <input class="inline-search" id="purchase-history-search" type="search" placeholder="Search vendor or purchase" />
+              </div>
+              <div id="purchase-history" class="list-table"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="customers" class="module-section">
+          <div class="card-grid two-col">
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Add / Edit Customer</h3>
+              </div>
+              <form id="customer-form">
+                <input type="hidden" id="customer-id" />
+                <div class="form-grid">
+                  <div class="field">
+                    <label>Name</label>
+                    <input type="text" id="customer-name" placeholder="John Doe" required />
+                  </div>
+                  <div class="field">
+                    <label>Phone</label>
+                    <input type="text" id="customer-phone" placeholder="0701234567" />
+                  </div>
+                  <div class="field">
+                    <label>Customer Type</label>
+                    <select id="customer-type">
+                      <option value="Physical">Walk-in customer</option>
+                      <option value="Delivery">Delivery customer</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Opening Balance</label>
+                    <input type="number" id="customer-balance" min="0" value="0" />
+                  </div>
+                </div>
+                <div class="action-row">
+                  <button class="primary" type="submit">Save Customer</button>
+                  <button class="secondary" type="button" id="reset-customer-form">Reset</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="panel-card" id="inventory-editor-panel">
+              <div class="panel-head">
+                <h3>Customer Lookup</h3>
+                <span class="list-total" id="customer-total">UGX 0</span>
+              </div>
+              <div class="field">
+                <label>Search customer</label>
+                <input type="text" id="customer-search" placeholder="Search by name or phone" />
+              </div>
+              <div id="customer-list" class="list-table compact"></div>
+              <div class="divider"></div>
+              <div class="panel-head"><h3>Credit Accounts</h3><span class="list-total" id="credit-total">UGX 0</span><input class="inline-search" id="credit-search" type="search" placeholder="Search credit account" /></div>
+              <div id="credit-accounts-list" class="list-table compact"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="vendors" class="module-section">
+          <header class="workspace-heading"><div><h2>Suppliers</h2><p>Manage your ingredient and product suppliers.</p></div><button class="primary" id="open-supplier-form" type="button">＋ Add Supplier</button></header>
+          <div class="supplier-directory panel-card">
+            <div class="supplier-search-row">
+              <label class="supplier-search" for="vendor-search">⌕ <input id="vendor-search" type="search" placeholder="Search suppliers..." /></label>
+              <span class="list-total" id="vendor-total">UGX 0</span>
+            </div>
+            <div id="vendor-list" class="list-table compact supplier-list"></div>
+          </div>
+          <div id="supplier-modal" class="supplier-modal" hidden>
+            <div class="supplier-modal-card" role="dialog" aria-modal="true" aria-labelledby="supplier-modal-title">
+              <div class="panel-head"><h3 id="supplier-modal-title">Add Supplier</h3><button class="menu-modal-close" id="close-supplier-form" type="button" aria-label="Close dialog">×</button></div>
+              <form id="vendor-form">
+                <input type="hidden" id="vendor-id" />
+                <div class="form-grid">
+                  <div class="field"><label for="vendor-name">Name</label><input type="text" id="vendor-name" placeholder="Kampala Fresh Farm" required /></div>
+                  <div class="field"><label for="vendor-phone">Phone</label><input type="text" id="vendor-phone" placeholder="+256 700 123456" /></div>
+                  <div class="field"><label for="vendor-email">Email</label><input type="email" id="vendor-email" placeholder="supplier@example.com" /></div>
+                  <div class="field"><label for="vendor-products">Products supplied</label><input type="text" id="vendor-products" placeholder="Vegetables, fruits" /></div>
+                  <div class="field"><label for="vendor-owed">Amount Owed</label><input type="number" id="vendor-owed" min="0" value="0" /></div>
+                </div>
+                <div class="action-row"><button class="primary" type="submit">Save Supplier</button><button class="secondary" type="button" id="reset-vendor-form">Reset</button><button class="secondary" type="button" id="cancel-supplier-form">Cancel</button></div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section id="menu-categories" class="module-section">
+          <div class="menu-workspace">
+            <header class="menu-workspace-heading">
+              <button class="primary menu-add-button" id="menu-add-item" type="button">
+                <span>+</span> Add Item
+              </button>
+            </header>
+
+            <div class="menu-tabs" role="tablist" aria-label="Menu Views">
+              <button class="menu-tab active" id="menu-tab-items" type="button" data-menu-tab="items" role="tab" aria-selected="true">Menu Items</button>
+              <button class="menu-tab" id="menu-tab-categories" type="button" data-menu-tab="categories" role="tab" aria-selected="false">Categories</button>
+            </div>
+
+            <!-- View 1: Menu Items View -->
+            <div class="menu-items-view" id="menu-items-view">
+              <div class="menu-catalog-panel">
+                <aside class="menu-category-panel" aria-label="Menu categories">
+                  <div class="menu-category-filters" id="menu-category-filters"></div>
+                </aside>
+                <div id="menu-product-list" class="menu-product-grid"></div>
+              </div>
+            </div>
+
+            <!-- View 2: Categories Overview View -->
+            <div class="menu-categories-view" id="menu-categories-view" hidden>
+              <div class="menu-category-overview">
+                <div class="menu-category-overview-heading">
+                  <div>
+                    <h3>Categories Overview</h3>
+                    <p class="section-note">Browse and organize food menu categories.</p>
+                  </div>
+                  <button class="text-button" id="menu-add-category-btn" type="button">+ New Category</button>
+                </div>
+                <div class="menu-category-cards" id="menu-category-cards"></div>
+              </div>
+            </div>
+
+            <!-- Hidden trackers for backwards compatibility with existing event handlers -->
+            <div class="menu-hidden-trackers" hidden aria-hidden="true">
+              <span id="menu-total">UGX 0</span>
+              <span id="menu-low-count">0</span>
+              <span id="menu-out-count">0</span>
+              <input type="search" id="menu-product-search" placeholder="Search menu..." />
+              <div id="menu-low-stock-list"></div>
+              <button id="view-low-stock" type="button">View All</button>
+            </div>
+          </div>
+          <div id="menu-item-modal" class="menu-item-modal" hidden>
+            <div class="menu-item-modal-card" role="dialog" aria-modal="true" aria-labelledby="menu-item-modal-title">
+              <div class="menu-item-modal-heading"><div><h3 id="menu-item-modal-title">Add Menu Item</h3><p class="section-note">Update the menu item sold to customers.</p></div><button class="menu-modal-close" id="menu-item-modal-close" type="button" aria-label="Close dialog">×</button></div>
+              <form id="product-form">
+                <input type="hidden" id="product-id" />
+                <div class="form-grid">
+                  <div class="field">
+                    <label>Name</label>
+                    <input type="text" id="product-name" placeholder="Chicken Pilau" required />
+                  </div>
+                  <div class="field">
+                    <label>Category</label>
+                    <input type="text" id="product-category" placeholder="Main Dishes" />
+                  </div>
+                  <div class="field" data-product-form-field="menu-image" hidden>
+                    <label for="product-image-file">Menu image (optional)</label>
+                    <input type="file" id="product-image-file" accept="image/*" />
+                    <small>Choose an image from your device. Maximum file size: 1 MB.</small>
+                    <img id="product-image-preview" alt="Menu item image preview" hidden />
+                  </div>
+                  <div class="field" data-product-form-field="inventory-image">
+                    <label>Image URL (optional)</label>
+                    <input type="url" id="product-image-url" placeholder="https://images.unsplash.com/..." />
+                  </div>
+                  <div class="field">
+                    <label>SKU</label>
+                    <input type="text" id="product-sku" placeholder="CHICKEN-PILAU" />
+                  </div>
+                  <div class="field" data-product-form-field="barcode">
+                    <label>Barcode</label>
+                    <input type="text" id="product-barcode" placeholder="Scan or enter barcode" />
+                  </div>
+                  <div class="field small" data-product-form-field="buying-price">
+                    <label>Buying Price</label>
+                    <input type="number" id="product-buying-price" min="0" value="0" />
+                  </div>
+                  <div class="field small">
+                    <label>Selling Price</label>
+                    <input type="number" id="product-selling-price" min="0" value="0" />
+                  </div>
+                  <div class="field small">
+                    <label>Stock <span id="product-stock-unit">(portion)</span></label>
+                    <input type="number" id="product-stock" min="0" value="0" />
+                  </div>
+                  <div class="field small" data-product-form-field="stock-alert">
+                    <label>Low Stock Alert <span id="product-threshold-unit">(portion)</span></label>
+                    <input type="number" id="product-low-stock" min="0" value="5" />
+                  </div>
+                  <div class="field">
+                    <label for="product-unit">Unit of measure</label>
+                    <input type="text" id="product-unit" list="unit-options" placeholder="portion, bottle, plate..." value="portion" maxlength="40" required />
+                    <small>Menu units are customer-facing sales units, separate from stock inventory tracking.</small>
+                    <datalist id="unit-options">
+                      <option value="portion"></option>
+                      <option value="piece"></option>
+                      <option value="plate"></option>
+                      <option value="glass"></option>
+                      <option value="bottle"></option>
+                      <option value="box"></option>
+                      <option value="pack"></option>
+                    </datalist>
+                  </div>
+                  <div class="field">
+                    <label>Expiry Date</label>
+                    <input type="date" id="product-expiry-date" />
+                  </div>
+                </div>
+                <div class="action-row">
+                  <button class="primary" type="submit">Save Menu Item</button>
+                  <button class="secondary" type="button" id="reset-product-form">Reset</button>
+                  <button class="secondary" type="button" id="cancel-menu-item">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section id="inventory" class="module-section">
+          <header class="workspace-heading"><div><h2>Inventory</h2><p>Track purchased stock, ingredients, and replenishment.</p></div><button class="primary" id="inventory-add-item" type="button">＋ Add Stock Item</button></header>
+          <div class="inventory-toolbar">
+            <div class="inventory-tabs" role="group" aria-label="Filter inventory">
+              <button class="inventory-tab active" type="button" data-inventory-filter="all">All Items</button>
+              <button class="inventory-tab" type="button" data-inventory-filter="low">Low Stock <span id="inventory-low-count">0</span></button>
+              <button class="inventory-tab" type="button" data-inventory-filter="out">Out of Stock <span id="inventory-out-count">0</span></button>
+            </div>
+            <label class="inventory-search" for="inventory-product-search">⌕ <input class="inline-search" id="inventory-product-search" type="search" placeholder="Search inventory..." /></label>
+          </div>
+          <div class="inventory-workspace">
+            <div class="inventory-table-panel panel-card">
+              <div class="inventory-table-summary"><h3>Inventory Items</h3><span id="inventory-total" class="list-total">UGX 0</span></div>
+              <div id="inventory-product-list" class="list-table inventory-list"></div>
+            </div>
+            <aside class="inventory-alerts panel-card">
+              <div class="panel-head"><h3>Stock Alerts</h3><button class="text-button" id="view-low-stock-inventory" type="button">View All</button></div>
+              <div id="inventory-low-stock-list" class="low-stock-list"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="accounts" class="module-section">
+          <header class="workspace-heading reports-heading"><div><h2>Reports</h2><p>View sales, orders and business performance.</p></div><div class="workspace-heading-actions"><label class="workspace-date-filter">▣ <select id="reports-period" aria-label="Report period"><option value="month">This month</option><option value="today">Today</option><option value="week">This week</option><option value="all">All time</option></select></label><button class="primary" id="export-sales-report" type="button">♧ Export</button></div></header>
+          <div class="reports-tabs" role="tablist" aria-label="Report type">
+            <button class="reports-tab active" type="button" data-report-tab="sales" role="tab" aria-selected="true">Sales Report</button>
+            <button class="reports-tab" type="button" data-report-tab="popular" role="tab" aria-selected="false">Popular Items</button>
+            <button class="reports-tab" type="button" data-report-tab="orders" role="tab" aria-selected="false">Orders</button>
+            <button class="reports-tab" type="button" data-report-tab="expenses" role="tab" aria-selected="false">Expenses</button>
+            <button class="reports-tab" type="button" data-report-tab="customers" role="tab" aria-selected="false">Customers</button>
+          </div>
+          <div class="reports-summary-cards">
+            <article class="reports-summary-card"><span>Total Sales</span><strong id="reports-total-sales">UGX 0</strong><small>For selected period</small></article>
+            <article class="reports-summary-card"><span>Total Orders</span><strong id="reports-total-orders">0</strong><small>Completed orders</small></article>
+            <article class="reports-summary-card"><span>Avg. Order Value</span><strong id="reports-average-order">UGX 0</strong><small>Average per completed order</small></article>
+            <article class="reports-summary-card"><span>Total Profit</span><strong id="reports-total-profit">UGX 0</strong><small>Sales less recorded expenses</small></article>
+          </div>
+          <div class="reports-visuals">
+            <article class="panel-card reports-trend-panel"><div class="panel-head"><div><h3 id="reports-main-panel-title">Sales Trend</h3><p class="section-note">Sales totals over the selected period</p></div></div><div id="reports-sales-chart" class="reports-sales-chart"></div></article>
+            <article class="panel-card reports-popular-panel"><div class="panel-head"><div><h3 id="reports-side-panel-title">Best Selling Items</h3><p class="section-note" id="reports-side-panel-note">Most ordered menu items</p></div></div><div id="reports-side-panel" class="reports-side-panel"></div></article>
+          </div>
+          <details class="reports-legacy-details"><summary>Expenses, payment records &amp; detailed transaction reports</summary>
+          <div class="stats-grid three-col">
+            <div class="stat-card good">
+              <span class="label">Income Today</span>
+              <strong id="today-income">UGX 0</strong>
+            </div>
+            <div class="stat-card danger">
+              <span class="label">Expenses Today</span>
+              <strong id="today-expenses">UGX 0</strong>
+            </div>
+            <div class="stat-card accent">
+              <span class="label">Estimated Profit</span>
+              <strong id="today-profit">UGX 0</strong>
+            </div>
+            <div class="stat-card neutral">
+              <span class="label">Current Balance</span>
+              <strong id="current-balance">UGX 0</strong>
+            </div>
+          </div>
+
+          <div class="card-grid two-col">
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Record Expense</h3>
+              </div>
+              <form id="expense-form">
+                <div class="form-grid">
+                  <div class="field">
+                    <label>Expense Name</label>
+                    <input type="text" id="expense-name" placeholder="Electricity" required />
+                  </div>
+                  <div class="field small">
+                    <label>Amount</label>
+                    <input type="number" id="expense-amount" min="0" value="0" required />
+                  </div>
+                  <div class="field small">
+                    <label>Date</label>
+                    <input type="date" id="expense-date" />
+                  </div>
+                  <div class="field">
+                    <label>Description</label>
+                    <textarea id="expense-description" rows="3" placeholder="Monthly electricity bill"></textarea>
+                  </div>
+                </div>
+                <div class="action-row">
+                  <button class="primary" type="submit">Save Expense</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Payment / Cash Flow</h3>
+              </div>
+              <form id="payment-form">
+                <div class="form-grid">
+                  <div class="field">
+                    <label>Type</label>
+                    <select id="payment-type">
+                      <option value="Income">Income</option>
+                      <option value="Expense">Expense</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Label</label>
+                    <input type="text" id="payment-label" placeholder="Shop rent / customer payment" required />
+                  </div>
+                  <div class="field small">
+                    <label>Amount</label>
+                    <input type="number" id="payment-amount" min="0" value="0" required />
+                  </div>
+                  <div class="field small">
+                    <label>Date</label>
+                    <input type="date" id="payment-date" />
+                  </div>
+                </div>
+                <div class="action-row">
+                  <button class="primary" type="submit">Save Payment</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="card-grid single-col">
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Expense Ledger</h3>
+                <span class="list-total" id="expense-total">UGX 0</span>
+                <input class="inline-search" id="expense-search" type="search" placeholder="Search expense or payment" />
+              </div>
+              <div id="expense-history" class="list-table"></div>
+            </div>
+          </div>
+
+          <div class="card-grid single-col" id="payments-history-panel">
+            <div class="panel-card">
+              <div class="panel-head">
+                <div>
+                  <h3>Today's Payments Summary</h3>
+                  <p class="section-note">Confirmed Cash and Pesapal payments collected today.</p>
+                </div>
+                <span class="list-total" id="payment-today-grand-total">UGX 0</span>
+              </div>
+              <div class="stats-grid two-col" id="payment-today-cards">
+                <div class="stat-card good">
+                  <span class="label">💵 Cash</span>
+                  <strong id="summary-cash-total">UGX 0</strong>
+                  <small id="summary-cash-count" class="muted">0 transactions</small>
+                </div>
+                <div class="stat-card accent">
+                  <span class="label">🛡 Pesapal</span>
+                  <strong id="summary-pesapal-total">UGX 0</strong>
+                  <small id="summary-pesapal-count" class="muted">0 transactions</small>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="panel-head">
+                <div>
+                  <h3>Payment Transactions</h3>
+                  <p class="section-note">Filter, reconcile merchant payments, and manage transaction records.</p>
+                </div>
+                <span class="muted" id="payment-count-badge">0 records</span>
+              </div>
+              <div class="form-grid payment-filters">
+                <div class="field small">
+                  <label for="filter-payment-method">Payment Method</label>
+                  <select id="filter-payment-method">
+                    <option value="">All Methods</option>
+                    <option value="CASH">Cash</option>
+                    <option value="MTN_MOMO">MTN Mobile Money</option>
+                    <option value="AIRTEL_MONEY">Airtel Money</option>
+                    <option value="CARD">Visa / Mastercard</option>
+                    <option value="MERCHANT_CODE">Merchant Code</option>
+                    <option value="QR">QR Payment</option>
+                  </select>
+                </div>
+                <div class="field small">
+                  <label for="filter-payment-status">Status</label>
+                  <select id="filter-payment-status">
+                    <option value="">All Statuses</option>
+                    <option value="SUCCESS">SUCCESS</option>
+                    <option value="PENDING">PENDING</option>
+                    <option value="FAILED">FAILED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                    <option value="EXPIRED">EXPIRED</option>
+                    <option value="REFUNDED">REFUNDED</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="filter-payment-search">Search Reference / Receipt / Phone</label>
+                  <input type="search" id="filter-payment-search" placeholder="Search reference, phone, receipt number..." />
+                </div>
+              </div>
+              <div id="payment-transactions-list" class="list-table"></div>
+            </div>
+          </div>
+
+          <div class="card-grid single-col">
+            <div class="panel-card">
+              <div class="panel-head">
+                <div>
+                  <h3>Transaction Reports</h3>
+                  <p class="section-note">Filter any recorded transaction and print the result.</p>
+                </div>
+                <span class="muted" id="report-summary">0 transactions</span>
+              </div>
+              <div class="form-grid report-filters">
+                <div class="field">
+                  <label for="report-type">Transaction Type</label>
+                  <select id="report-type">
+                    <option value="">All transactions</option>
+                    <option value="Sale">Sales</option>
+                    <option value="Purchase">Purchases</option>
+                    <option value="Expense">Expenses</option>
+                    <option value="Income">Income payments</option>
+                    <option value="Quotation">Quotations</option>
+                  </select>
+                </div>
+                <div class="field small">
+                  <label for="report-from">From</label>
+                  <input type="date" id="report-from" />
+                </div>
+                <div class="field small">
+                  <label for="report-to">To</label>
+                  <input type="date" id="report-to" />
+                </div>
+              </div>
+              <div class="action-row">
+                <button class="primary" id="print-report" type="button">Print Filtered Report</button>
+              </div>
+              <div id="report-results" class="list-table report-results"></div>
+            </div>
+          </div>
+          </details>
+        </section>
+
+        <section id="management" class="module-section">
+          <div id="admin-settings-panel">
+            <div class="card-grid single-col">
+            <div class="panel-card">
+              <div class="panel-head">
+                <div>
+                  <h3>Administration</h3>
+                  <p class="section-note">Manage business receipt details and registered staff accounts.</p>
+                </div>
+                <span class="muted">Admin only</span>
+              </div>
+              <form id="business-settings-form">
+                <div class="form-grid">
+                  <div class="field">
+                    <label>Business Name</label>
+                    <input type="text" id="business-name" required />
+                  </div>
+                  <div class="field">
+                    <label>Business Contact Number</label>
+                    <input type="text" id="business-phone" placeholder="0700000000" required />
+                  </div>
+                  <div class="field">
+                    <label>Business Address</label>
+                    <input type="text" id="business-address" placeholder="Kampala, Uganda" />
+                  </div>
+                  <div class="field">
+                    <label>Business Email</label>
+                    <input type="email" id="business-email" placeholder="hello@business.com" />
+                  </div>
+                  <div class="field">
+                    <label>Business Logo</label>
+                    <input type="file" id="business-logo" accept="image/png,image/jpeg,image/webp,image/gif" />
+                    <small class="section-note">Choose a logo image from your files.</small>
+                    <img id="business-logo-preview" class="business-logo-preview" alt="Business logo preview" hidden />
+                  </div>
+                  <div class="field small">
+                    <label>Country</label>
+                    <input type="text" id="business-country" placeholder="Uganda" />
+                  </div>
+                  <div class="field small">
+                    <label>Currency</label>
+                    <input type="text" id="business-currency" placeholder="UGX" maxlength="6" required />
+                  </div>
+                  <div class="field small">
+                    <label>Tax / VAT Rate (%)</label>
+                    <input type="number" id="business-tax-rate" min="0" max="100" value="0" required />
+                  </div>
+                  <div class="field small">
+                    <label>Opening Balance (UGX)</label>
+                    <input type="number" id="business-opening-balance" min="0" value="0" required />
+                  </div>
+                  <div class="field small">
+                    <label>Financial Year Starts</label>
+                    <input type="date" id="business-financial-year" required />
+                  </div>
+                  <div class="field">
+                    <label>Business Locations</label>
+                    <select id="business-multi-branch">
+                      <option value="false">No, I have one business location</option>
+                      <option value="true">Yes, I have multiple branches</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="action-row">
+                  <button class="primary" type="submit">Save Business Details</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="card-grid single-col">
+            <div class="panel-card">
+              <div class="panel-head">
+                <div>
+                  <h3>Mobile Money Accounts</h3>
+                  <p class="section-note">Business receiving accounts only. These numbers are never treated as customer phone numbers.</p>
+                </div>
+              </div>
+              <form id="mobile-money-account-form">
+                <input type="hidden" id="mobile-money-account-id" />
+                <div class="form-grid">
+                  <div class="field"><label for="mobile-money-account-network">Network</label><select id="mobile-money-account-network"><option value="MTN">MTN Mobile Money</option><option value="Airtel">Airtel Money</option></select></div>
+                  <div class="field"><label for="mobile-money-account-name">Account / Recipient Name</label><input type="text" id="mobile-money-account-name" required /></div>
+                  <div class="field"><label for="mobile-money-account-phone">Mobile Money Phone Number</label><input type="tel" id="mobile-money-account-phone" placeholder="0772 123 456" required /></div>
+                  <div class="field"><label for="mobile-money-account-description">Description</label><input type="text" id="mobile-money-account-description" placeholder="Main shop account" /></div>
+                  <div class="field"><label for="mobile-money-account-status">Status</label><select id="mobile-money-account-status"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
+                  <div class="field multi-branch-only" hidden><label for="mobile-money-account-branch">Branch</label><select id="mobile-money-account-branch"><option value="">Business-wide</option></select></div>
+                </div>
+                <div class="action-row"><button class="primary" type="submit">Save Mobile Money Account</button><button class="secondary" type="button" id="reset-mobile-money-account">Clear</button></div>
+              </form>
+              <div id="mobile-money-account-list" class="list-table compact"></div>
+            </div>
+          </div>
+          <div class="card-grid single-col">
+            <div class="panel-card">
+              <div class="panel-head">
+                <div>
+                  <h3>Settings → Payments</h3>
+                  <p class="section-note">Configure Pesapal API 3.0 for secure customer checkout.</p>
+                </div>
+                <span class="muted">Admin only</span>
+              </div>
+              <form id="payment-settings-form">
+                <div class="form-grid">
+                  <div class="field">
+                  <label for="setting-pesapal-environment">Pesapal Environment</label>
+                  <select id="setting-pesapal-environment">
+                    <option value="sandbox">Sandbox</option>
+                    <option value="production">Production</option>
+                  </select>
+                  <small class="section-note">Production checkout requires valid production credentials and HTTPS callback/IPN URLs.</small>
+                </div>
+                <div class="field">
+                  <label for="setting-receipt-notes">Receipt Footer Note</label>
+                  <input type="text" id="setting-receipt-notes" value="Thank you for shopping with us" />
+                </div>
+              </div>
+              <p id="pesapal-readiness" class="section-note" role="status">Pesapal configuration status is not available.</p>
+              <div class="action-row">
+                <button class="primary" type="submit">Save Payment Configuration</button>
+              </div>
+              <p class="section-note" style="margin-top: 0.5rem; background: #eaf3ff; padding: 0.6rem 0.8rem; border-radius: 8px; border-left: 3px solid var(--primary);">
+                <strong>Credential security:</strong> Set Pesapal consumer keys and public callback/IPN URLs in the server environment. Secrets are never stored in the browser or business settings.
+              </p>
+              </form>
+            </div>
+          </div>
+          <div class="card-grid single-col">
+            <div class="panel-card">
+              <div class="panel-head"><h3>Staff Accounts</h3><input class="inline-search" id="staff-search" type="search" placeholder="Search staff or role" /></div>
+              <form id="staff-account-form">
+                <input type="hidden" id="staff-id" />
+                <div class="form-grid">
+                  <div class="field">
+                    <label>Full Name</label>
+                    <input type="text" id="staff-name" placeholder="Cashier name" required />
+                  </div>
+                  <div class="field">
+                    <label>Username</label>
+                    <input type="text" id="staff-username" placeholder="cashier1" required />
+                  </div>
+                  <div class="field">
+                    <label>Password</label>
+                    <input type="password" id="staff-password" placeholder="Temporary password" />
+                  </div>
+                  <div class="field">
+                    <label>Department / Role</label>
+                    <select id="staff-role">
+                      <option value="owner">Business Owner</option>
+                      <option value="manager">Branch Manager</option>
+                      <option value="sales">Sales / Delivery Cashier</option>
+                      <option value="purchase">Purchase & Inventory</option>
+                      <option value="delivery">Delivery Person</option>
+                      <option value="admin">Administrator</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Phone Number</label>
+                    <input type="tel" id="staff-phone" placeholder="0700000000" />
+                  </div>
+                  <div class="field"><label>Email Address</label><input type="email" id="staff-email" placeholder="name@example.com" /></div>
+                  <div class="field">
+                    <label>Address</label>
+                    <input type="text" id="staff-address" placeholder="Kampala, Uganda" />
+                  </div>
+                  <div class="field multi-branch-only" hidden id="staff-branch-field">
+                    <label>Assigned Branch</label>
+                    <select id="staff-branch"></select>
+                  </div>
+                </div>
+                <div class="action-row">
+                  <button class="primary" id="staff-submit-button" type="submit">Register Staff Account</button>
+                  <button class="secondary" id="reset-staff-form" type="button">Clear</button>
+                </div>
+              </form>
+              <div class="divider"></div>
+              <div id="staff-account-list" class="list-table compact"></div>
+            </div>
+          </div>
+          </div>
+        </section>
+
+        <section id="branches" class="module-section multi-branch-only" hidden>
+          <div class="card-grid two-col">
+            <div class="panel-card">
+              <div class="panel-head"><h3>Branch Management</h3><span class="muted">Frontend structure</span></div>
+              <form id="branch-form">
+                <input type="hidden" id="branch-id" />
+                <div class="form-grid">
+                  <div class="field"><label for="branch-name">Branch Name</label><input type="text" id="branch-name" required /></div>
+                  <div class="field"><label for="branch-phone">Phone</label><input type="text" id="branch-phone" /></div>
+                  <div class="field"><label for="branch-address">Address</label><input type="text" id="branch-address" required /></div>
+                  <div class="field"><label for="branch-manager">Branch Manager</label><select id="branch-manager"></select></div>
+                  <label class="checkbox-label"><input type="checkbox" id="branch-active" checked /> Active branch</label>
+                </div>
+                <div class="action-row"><button class="primary" type="submit">Save Branch</button><button class="secondary" type="button" id="reset-branch">Clear</button></div>
+              </form>
+            </div>
+            <div class="panel-card"><div class="panel-head"><h3>Stock Transfers</h3><span class="muted">Future workflow</span></div><form id="stock-transfer-form"><div class="form-grid"><div class="field"><label for="transfer-from">From</label><select id="transfer-from"></select></div><div class="field"><label for="transfer-to">To</label><select id="transfer-to"></select></div><div class="field"><label for="transfer-product">Product</label><select id="transfer-product"></select></div>            <div class="field small"><label for="transfer-qty">Quantity <span id="transfer-quantity-unit">(piece)</span></label><input type="number" id="transfer-qty" min="1" value="1" /></div></div><div class="action-row"><button class="secondary" type="submit">Prepare Transfer</button></div></form><div id="stock-transfer-list" class="list-table compact"></div></div>
+          </div>
+          <div class="card-grid single-col"><div class="panel-card"><div class="panel-head"><h3>Branches</h3><input class="inline-search" id="branch-search" type="search" placeholder="Search branch or manager" /><span class="section-note">Branch-specific inventory, sales, purchases, quotations, invoices, payments, and reports can use this context.</span></div><div id="branch-list" class="list-table"></div></div></div>
+        </section>
+
+        <section id="delivery" class="module-section">
+          <div class="card-grid two-col">
+            <div class="panel-card" id="delivery-create-panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Delivery Operations</h3>
+                  <p class="section-note">Deliveries are created automatically from completed sales.</p>
+                </div>
+              </div>
+              <div class="delivery-summary" id="delivery-summary"></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Delivery Filters</h3>
+              </div>
+              <div class="form-grid delivery-filters">
+                <div class="field"><label for="delivery-filter-date">Date</label><input type="date" id="delivery-filter-date" /></div>
+                <div class="field"><label for="delivery-filter-status">Status</label><select id="delivery-filter-status"><option value="">All statuses</option></select></div>
+                <div class="field"><label for="delivery-filter-driver">Delivery Person</label><select id="delivery-filter-driver"><option value="">All delivery people</option></select></div>
+                <div class="field"><label for="delivery-filter-customer">Customer</label><input type="search" id="delivery-filter-customer" placeholder="Name or phone" /></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-grid single-col">
+            <div class="panel-card">
+              <div class="panel-head"><h3>Delivery Board</h3><span class="list-total" id="delivery-total">UGX 0</span><span class="muted" id="delivery-board-count"></span></div>
+              <div id="delivery-list" class="list-table delivery-table"></div>
+            </div>
+          </div>
+        </section>
+
+        <div id="delivery-modal" class="delivery-modal" hidden>
+          <div class="delivery-modal-card" role="dialog" aria-modal="true" aria-labelledby="delivery-modal-title">
+            <h3 id="delivery-modal-title">Delivery action</h3>
+            <form id="delivery-modal-form">
+              <div id="delivery-modal-fields"></div>
+              <div class="action-row">
+                <button class="primary" type="submit" id="delivery-modal-submit">Confirm</button>
+                <button class="secondary" type="button" id="delivery-modal-cancel">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div id="return-sale-modal" class="delivery-modal" hidden>
+          <div class="delivery-modal-card return-sale-modal-card" role="dialog" aria-modal="true" aria-labelledby="return-sale-title">
+            <h3 id="return-sale-title">Return this sale?</h3>
+            <p id="return-sale-message">The sale will be returned and inventory will be adjusted.</p>
+            <div class="action-row">
+              <button class="primary" id="confirm-return-sale" type="button">Yes, Return Sale</button>
+              <button class="secondary" id="cancel-return-sale" type="button">No, Keep Sale</button>
+            </div>
+          </div>
+        </div>
+
+        <section id="history" class="module-section" hidden>
+          <header class="workspace-heading"><div><h2>Orders</h2><p>View and manage all restaurant orders.</p></div><div class="orders-header-controls"><select id="orders-type-filter" aria-label="Filter order type"><option value="">All Orders</option><option value="Completed">Completed</option><option value="Returned">Returned</option></select><label class="workspace-date-filter">▣ <input id="orders-date-filter" type="date" aria-label="Filter orders by date" /></label></div></header>
+          <label class="orders-search" for="sales-history-search">⌕ <input class="inline-search" id="sales-history-search" type="search" placeholder="Search orders..." /></label>
+          <div id="orders-status-filters" class="orders-status-filters" role="group" aria-label="Filter orders by status">
+            <button class="orders-status-filter active" type="button" data-order-status-filter="">All</button>
+            <button class="orders-status-filter" type="button" data-order-status-filter="Pending">Pending</button>
+            <button class="orders-status-filter" type="button" data-order-status-filter="Preparing">Preparing</button>
+            <button class="orders-status-filter" type="button" data-order-status-filter="Ready">Ready</button>
+            <button class="orders-status-filter" type="button" data-order-status-filter="Completed">Completed</button>
+            <button class="orders-status-filter" type="button" data-order-status-filter="Cancelled">Cancelled</button>
+          </div>
+          <div class="panel-card orders-board-panel"><span id="sales-history-total" class="sr-only">UGX 0</span><div id="sales-history" class="list-table orders-list"></div></div>
+
+          <div hidden aria-hidden="true">
+            <div class="history-controls">
+              <button class="secondary" id="history-today" type="button">Today</button>
+              <label for="history-year">Year</label><select id="history-year"></select>
+              <label for="history-month">Month</label>
+              <select id="history-month">
+                <option value="0">January</option><option value="1">February</option>
+                <option value="2">March</option><option value="3">April</option>
+                <option value="4">May</option><option value="5">June</option>
+                <option value="6">July</option><option value="7">August</option>
+                <option value="8">September</option><option value="9">October</option>
+                <option value="10">November</option><option value="11">December</option>
+              </select>
+              </div>
+            <div id="history-calendar"></div>
+            <h3 id="history-selected-title">Selected date</h3>
+            <span id="history-selected-total">UGX 0</span>
+            <div id="history-selected-list"></div>
+            </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="barcode-scanner-modal" class="scanner-modal" hidden>
+      <div class="scanner-modal-card" role="dialog" aria-modal="true" aria-labelledby="barcode-scanner-title">
+        <div class="scanner-modal-header">
+          <div>
+            <p class="eyebrow">Barcode scanner</p>
+            <h3 id="barcode-scanner-title">Scan Barcode</h3>
+          </div>
+          <button class="secondary small" id="close-scanner-modal" type="button">Close</button>
+        </div>
+
+        <div class="scanner-options">
+          <button class="scanner-option" data-scanner-method="usb" type="button">🖥 USB / Keyboard Scanner</button>
+          <button class="scanner-option" data-scanner-method="bluetooth" type="button">🔵 Bluetooth Scanner</button>
+          <button class="scanner-option" data-scanner-method="phone" type="button">📱 Use Phone Camera</button>
+        </div>
+
+        <div id="scanner-modal-status" class="scanner-status">Choose a scanning method to continue.</div>
+
+        <div id="scanner-phone-connection" class="scanner-phone-connection" hidden>
+          <canvas id="scanner-phone-qrcode" width="180" height="180"></canvas>
+          <div class="scanner-phone-detail">
+            <strong>Pairing token</strong>
+            <span id="scanner-pairing-token">—</span>
+          </div>
+          <div class="scanner-phone-detail">
+            <strong>Connection</strong>
+            <span id="scanner-phone-status">Waiting for a phone…</span>
+          </div>
+          <div class="scanner-phone-detail">
+            <strong>Last scan</strong>
+            <span id="scanner-phone-last-scan">—</span>
+          </div>
+          <button class="secondary small full" id="scanner-disconnect-phone" type="button">Disconnect Phone</button>
+        </div>
+
+        <div class="action-row compact-row">
+          <button class="secondary" id="cancel-scanner-modal" type="button">Cancel</button>
+        </div>
+      </div>
+    <div id="pesapal-checkout-modal" class="pesapal-checkout-backdrop" hidden>
+      <section class="pesapal-checkout-card" role="dialog" aria-modal="true" aria-labelledby="pesapal-checkout-title">
+        <header class="pesapal-checkout-header">
+          <div class="pesapal-checkout-brand">
+            <span class="pesapal-shield" aria-hidden="true">✓</span>
+            <div>
+              <span class="pesapal-eyebrow">PESAPAL API 3.0 · UGANDA GATEWAY</span>
+              <h2 id="pesapal-checkout-title">Customer Payment at Cashier Desk</h2>
+            </div>
+          </div>
+          <div class="pesapal-checkout-total">
+            <span>Total Due</span>
+            <strong id="pesapal-checkout-total">UGX 0</strong>
+          </div>
+          <button class="payment-modal-close" id="close-pesapal-checkout" type="button" aria-label="Close Pesapal checkout">&times;</button>
+        </header>
+        <div class="pesapal-checkout-body">
+          <p class="pesapal-channel-title">Example payment options · availability depends on your Pesapal account</p>
+          <div class="pesapal-channel-grid" aria-label="Payment channels handled by Pesapal">
+            <div class="pesapal-channel-card"><span class="channel-icon channel-mtn">▯</span><strong>MTN MoMo</strong><small>Mobile money</small></div>
+            <div class="pesapal-channel-card"><span class="channel-icon channel-airtel">▯</span><strong>Airtel Money</strong><small>Mobile money</small></div>
+            <div class="pesapal-channel-card"><span class="channel-icon channel-qr">▦</span><strong>Pesapal QR</strong><small>Customer scans</small></div>
+            <div class="pesapal-channel-card"><span class="channel-icon channel-card">▱</span><strong>Visa / Master</strong><small>Secure card</small></div>
+          </div>
+          <label class="pesapal-phone-label" for="pesapal-checkout-phone">Customer phone number (optional)</label>
+          <input class="pesapal-phone-input" id="pesapal-checkout-phone" type="tel" autocomplete="tel" placeholder="077XXXXXXX or +2567XXXXXXX" />
+          <p class="pesapal-phone-help">Actual payment options depend on your Pesapal account. The customer selects an enabled method on Pesapal's secure checkout; the sale is recorded only after Pesapal confirms payment.</p>
+          <div id="pesapal-checkout-status" class="pesapal-checkout-status" role="status" aria-live="polite">Ready to start a secure Pesapal checkout.</div>
+        </div>
+        <footer class="pesapal-checkout-footer">
+          <button class="secondary" id="cancel-pesapal-checkout" type="button">Close</button>
+          <a class="secondary pesapal-redirect-link" id="pesapal-checkout-link" href="#" target="_blank" rel="noopener noreferrer" hidden>Open checkout</a>
+          <button class="primary pesapal-send-button" id="launch-pesapal-checkout" type="button">Continue to Pesapal checkout <span aria-hidden="true">→</span></button>
+        </footer>
+      </section>
+    </div>
+
+    <!-- Legacy payment panels remain hidden; Sales uses only Cash and Pesapal. -->
+    <div id="pos-payment-modal" class="payment-modal-backdrop" hidden>
+      <div class="payment-modal-card" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
+        
+        <!-- Header -->
+        <div class="payment-modal-header">
+          <div>
+            <span class="payment-badge">Checkout</span>
+            <h3 id="payment-modal-title">Complete Payment</h3>
+          </div>
+          <button class="payment-modal-close" id="close-payment-modal" type="button" aria-label="Close payment modal">&times;</button>
+        </div>
+
+        <!-- Ugandan Total Banner -->
+        <div class="payment-total-banner">
+          <span class="payment-total-label">TOTAL AMOUNT DUE</span>
+          <div class="payment-total-row">
+            <span class="currency-tag">UGX</span>
+            <strong class="payment-total-number" id="payment-modal-total">0</strong>
+          </div>
+          <span class="payment-items-count" id="payment-modal-items-count">0 items</span>
+        </div>
+
+        <!-- Touch-Friendly Ugandan Payment Method Buttons -->
+        <div class="payment-method-grid" role="tablist">
+          <button class="payment-method-btn active" data-method="CASH" role="tab" type="button">
+            <span class="btn-emoji">💵</span>
+            <span class="btn-text">CASH</span>
+          </button>
+          <button class="payment-method-btn btn-mtn" data-method="MTN_MOMO" role="tab" type="button">
+            <span class="btn-emoji">🟡</span>
+            <span class="btn-text">MTN MOMO</span>
+          </button>
+          <button class="payment-method-btn btn-airtel" data-method="AIRTEL_MONEY" role="tab" type="button">
+            <span class="btn-emoji">🔴</span>
+            <span class="btn-text">AIRTEL MONEY</span>
+          </button>
+          <button class="payment-method-btn btn-card" data-method="CARD" role="tab" type="button">
+            <span class="btn-emoji">💳</span>
+            <span class="btn-text">VISA / MASTERCARD</span>
+          </button>
+          <button class="payment-method-btn btn-merchant" data-method="MERCHANT_CODE" role="tab" type="button">
+            <span class="btn-emoji">🏪</span>
+            <span class="btn-text">MERCHANT CODE</span>
+          </button>
+          <button class="payment-method-btn btn-qr" data-method="QR" role="tab" type="button">
+            <span class="btn-emoji">📱</span>
+            <span class="btn-text">QR PAYMENT</span>
+          </button>
+        </div>
+
+        <!-- Panels Container -->
+        <div class="payment-panels-wrap">
+
+          <!-- 1. CASH PANEL -->
+          <div class="payment-panel active" id="pay-panel-cash">
+            <div class="cash-calc-card">
+              <div class="calc-row">
+                <span class="calc-label">Total Sale:</span>
+                <strong class="calc-val" id="cash-sale-total">UGX 0</strong>
+              </div>
+              <div class="field cash-input-field">
+                <label for="cash-received-input">Amount Received (UGX)</label>
+                <div class="cash-input-wrap">
+                  <span class="cash-currency-prefix">UGX</span>
+                  <input type="number" id="payment-cash-received-input" min="0" step="500" placeholder="0" autocomplete="off" />
+                </div>
+              </div>
+              <!-- Quick Uganda Currency Denominations -->
+              <div class="quick-cash-row">
+                <button class="quick-cash-chip exact" id="quick-cash-exact" type="button">Exact</button>
+                <button class="quick-cash-chip" data-amt="5000" type="button">5,000</button>
+                <button class="quick-cash-chip" data-amt="10000" type="button">10,000</button>
+                <button class="quick-cash-chip" data-amt="20000" type="button">20,000</button>
+                <button class="quick-cash-chip" data-amt="50000" type="button">50,000</button>
+                <button class="quick-cash-chip" data-amt="100000" type="button">100,000</button>
+              </div>
+              <div class="calc-row change-row" id="cash-change-box">
+                <span class="calc-label">Change to Return:</span>
+                <strong class="calc-val change-val" id="cash-change-amount">UGX 0</strong>
+              </div>
+              <div class="cash-error-msg" id="cash-error-msg" hidden>Amount received is less than total.</div>
+            </div>
+            <div class="action-row modal-action-row">
+              <button class="primary wide-btn" id="confirm-cash-sale" type="button">Complete Sale</button>
+            </div>
+          </div>
+
+          <!-- 2. MTN MOMO PANEL -->
+          <div class="payment-panel" id="pay-panel-mtn" hidden>
+            <div class="momo-card mtn-theme">
+              <div class="momo-header">
+                <span class="momo-brand-tag">MTN MOBILE MONEY</span>
+                <span class="momo-network-status">MoMo Pay Ready</span>
+              </div>
+              
+              <!-- Input view -->
+              <div id="mtn-input-view">
+                <div class="calc-row">
+                  <span class="calc-label">Amount:</span>
+                  <strong class="calc-val" id="mtn-sale-total">UGX 0</strong>
+                </div>
+                <div class="field">
+                  <label for="mtn-phone-input">Customer Phone Number</label>
+                  <div class="phone-input-wrap">
+                    <span class="phone-network-indicator mtn-indicator">077/078</span>
+                    <input type="tel" id="mtn-phone-input" placeholder="077XXXXXXXX or 078XXXXXXX" maxlength="14" />
+                  </div>
+                  <small class="phone-hint">Enter MTN Uganda number. Customer will receive a prompt on their phone.</small>
+                </div>
+                <div class="action-row modal-action-row">
+                  <button class="primary wide-btn btn-mtn-action" id="request-mtn-payment" type="button">Request Payment</button>
+                </div>
+              </div>
+
+              <!-- Pending / Progress view -->
+              <div class="momo-status-view" id="mtn-pending-view" hidden>
+                <div class="pulse-ring yellow-ring"></div>
+                <h4>PAYMENT PENDING</h4>
+                <p class="status-subtitle">Waiting for customer to authorize payment on their phone...</p>
+                <div class="countdown-badge" id="mtn-countdown">02:00</div>
+                <div class="status-amount" id="mtn-pending-amount">UGX 0</div>
+                <div class="status-phone" id="mtn-pending-phone">077...</div>
+                <div class="action-row modal-action-row">
+                  <button class="secondary" id="cancel-mtn-payment" type="button">Cancel Request</button>
+                  <button class="secondary small" id="check-mtn-payment" type="button">Check Payment Status</button>
+                </div>
+              </div>
+
+              <!-- Success view -->
+              <div class="momo-status-view success-view" id="mtn-success-view" hidden>
+                <div class="success-icon-circle">&check;</div>
+                <h4 class="success-title">MTN MOBILE MONEY PAYMENT SUCCESSFUL</h4>
+                <div class="success-details">
+                  <div><span>Amount:</span> <strong id="mtn-success-amount">UGX 0</strong></div>
+                  <div><span>Transaction Reference:</span> <strong id="mtn-success-ref">TXN-000000</strong></div>
+                </div>
+                <div class="action-row modal-action-row">
+                  <button class="primary wide-btn" id="print-receipt-mtn" type="button">Print Receipt</button>
+                  <button class="secondary" id="finish-mtn-sale" type="button">New Sale</button>
+                </div>
+              </div>
+
+              <!-- Failure view -->
+              <div class="momo-status-view fail-view" id="mtn-fail-view" hidden>
+                <div class="fail-icon-circle">&times;</div>
+                <h4 class="fail-title">PAYMENT FAILED</h4>
+                <p class="fail-reason" id="mtn-fail-reason">Payment was not completed.</p>
+                <div class="action-row modal-action-row">
+                  <button class="primary" id="retry-mtn-payment" type="button">Try Again</button>
+                  <button class="secondary" id="switch-mtn-payment" type="button">Change Payment Method</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. AIRTEL MONEY PANEL -->
+          <div class="payment-panel" id="pay-panel-airtel" hidden>
+            <div class="momo-card airtel-theme">
+              <div class="momo-header">
+                <span class="momo-brand-tag airtel-tag">AIRTEL MONEY</span>
+                <span class="momo-network-status">Airtel Pay Ready</span>
+              </div>
+              
+              <div id="airtel-input-view">
+                <div class="calc-row">
+                  <span class="calc-label">Amount:</span>
+                  <strong class="calc-val" id="airtel-sale-total">UGX 0</strong>
+                </div>
+                <div class="field">
+                  <label for="airtel-phone-input">Customer Phone Number</label>
+                  <div class="phone-input-wrap">
+                    <span class="phone-network-indicator airtel-indicator">070/075</span>
+                    <input type="tel" id="airtel-phone-input" placeholder="070XXXXXXXX or 075XXXXXXX" maxlength="14" />
+                  </div>
+                  <small class="phone-hint">Enter Airtel Uganda number. Customer will receive a prompt on their phone.</small>
+                </div>
+                <div class="action-row modal-action-row">
+                  <button class="primary wide-btn btn-airtel-action" id="request-airtel-payment" type="button">Request Payment</button>
+                </div>
+              </div>
+
+              <div class="momo-status-view" id="airtel-pending-view" hidden>
+                <div class="pulse-ring red-ring"></div>
+                <h4>PAYMENT PENDING</h4>
+                <p class="status-subtitle">Waiting for customer authorization on Airtel phone...</p>
+                <div class="countdown-badge" id="airtel-countdown">02:00</div>
+                <div class="status-amount" id="airtel-pending-amount">UGX 0</div>
+                <div class="status-phone" id="airtel-pending-phone">070...</div>
+                <div class="action-row modal-action-row">
+                  <button class="secondary" id="cancel-airtel-payment" type="button">Cancel Request</button>
+                  <button class="secondary small" id="check-airtel-payment" type="button">Check Payment Status</button>
+                </div>
+              </div>
+
+              <div class="momo-status-view success-view" id="airtel-success-view" hidden>
+                <div class="success-icon-circle airtel-circle">&check;</div>
+                <h4 class="success-title">AIRTEL MONEY PAYMENT SUCCESSFUL</h4>
+                <div class="success-details">
+                  <div><span>Amount:</span> <strong id="airtel-success-amount">UGX 0</strong></div>
+                  <div><span>Transaction Reference:</span> <strong id="airtel-success-ref">TXN-000000</strong></div>
+                </div>
+                <div class="action-row modal-action-row">
+                  <button class="primary wide-btn" id="print-receipt-airtel" type="button">Print Receipt</button>
+                  <button class="secondary" id="finish-airtel-sale" type="button">New Sale</button>
+                </div>
+              </div>
+
+              <div class="momo-status-view fail-view" id="airtel-fail-view" hidden>
+                <div class="fail-icon-circle">&times;</div>
+                <h4 class="fail-title">PAYMENT FAILED</h4>
+                <p class="fail-reason" id="airtel-fail-reason">Payment was not completed.</p>
+                <div class="action-row modal-action-row">
+                  <button class="primary" id="retry-airtel-payment" type="button">Try Again</button>
+                  <button class="secondary" id="switch-airtel-payment" type="button">Change Payment Method</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. VISA / MASTERCARD PANEL -->
+          <div class="payment-panel" id="pay-panel-card" hidden>
+            <div class="card-terminal-box">
+              <div class="terminal-banner">
+                <span class="card-brands-row">💳 Visa / Mastercard</span>
+                <span class="pci-badge">PCI-DSS Compliant</span>
+              </div>
+              <div class="calc-row">
+                <span class="calc-label">Amount:</span>
+                <strong class="calc-val" id="card-sale-total">UGX 0</strong>
+              </div>
+              
+              <div id="card-idle-view">
+                <p class="terminal-instructions">Customer can tap, insert chip, or swipe card on the connected POS terminal.</p>
+                <div class="action-row modal-action-row">
+                  <button class="primary wide-btn" id="start-card-payment" type="button">Start Card Payment</button>
+                </div>
+              </div>
+
+              <div id="card-pending-view" class="momo-status-view" hidden>
+                <div class="pulse-ring blue-ring"></div>
+                <h4>WAITING FOR CARD TERMINAL</h4>
+                <p class="status-subtitle">Customer: Tap, Insert Chip, or Enter PIN on terminal...</p>
+                <div class="action-row modal-action-row">
+                  <button class="secondary" id="cancel-card-payment" type="button">Cancel</button>
+                </div>
+              </div>
+
+              <div id="card-success-view" class="momo-status-view success-view" hidden>
+                <div class="success-icon-circle">&check;</div>
+                <h4 class="success-title">CARD PAYMENT APPROVED</h4>
+                <div class="success-details">
+                  <div><span>Amount:</span> <strong id="card-success-amount">UGX 0</strong></div>
+                  <div><span>Reference:</span> <strong id="card-success-ref">CRD-000000</strong></div>
+                  <div><span>Card:</span> <span id="card-success-pan">**** 4821</span></div>
+                </div>
+                <div class="action-row modal-action-row">
+                  <button class="primary wide-btn" id="print-receipt-card" type="button">Print Receipt</button>
+                  <button class="secondary" id="finish-card-sale" type="button">New Sale</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. MERCHANT CODE PANEL -->
+          <div class="payment-panel" id="pay-panel-merchant" hidden>
+            <div class="merchant-code-box">
+              <div class="network-toggle-row">
+                <button class="network-pill active" id="merchant-tab-mtn" type="button">🟡 MTN MoMo Pay</button>
+                <button class="network-pill" id="merchant-tab-airtel" type="button">🔴 Airtel Pay</button>
+              </div>
+
+              <div class="calc-row">
+                <span class="calc-label">Amount to Pay:</span>
+                <strong class="calc-val" id="merchant-sale-total">UGX 0</strong>
+              </div>
+
+              <div class="merchant-code-banner">
+                <span class="merchant-code-label" id="merchant-code-header">MTN MERCHANT CODE</span>
+                <strong class="merchant-code-number" id="merchant-code-display">123456</strong>
+              </div>
+
+              <div class="ussd-steps-box">
+                <strong>Customer Instructions:</strong>
+                <ol id="merchant-steps-list">
+                  <li>Dial <strong>*165*3#</strong> on phone</li>
+                  <li>Select 1 (Enter Merchant Code)</li>
+                  <li>Enter Merchant Code: <strong id="step-code-val">123456</strong></li>
+                  <li>Enter Amount: <strong id="step-amount-val">UGX 0</strong></li>
+                  <li>Enter Mobile Money PIN to authorize</li>
+                </ol>
+              </div>
+
+              <div class="field">
+                <label for="merchant-sms-reference">Customer SMS / Transaction Reference</label>
+                <input type="text" id="merchant-sms-reference" placeholder="e.g. 1726354890 or MM-REF" />
+                <small class="phone-hint">Enter the reference code received on the customer's phone confirmation SMS.</small>
+              </div>
+
+              <div class="action-row modal-action-row">
+                <button class="primary wide-btn" id="record-merchant-payment" type="button">Record Merchant Payment</button>
+              </div>
+
+              <div id="merchant-awaiting-view" class="momo-status-view" hidden>
+                <span class="badge warning-badge" style="background: #fff3cd; color: #856404; font-size: 0.85rem; padding: 0.35rem 0.75rem; border-radius: 999px; font-weight: 700;">PAYMENT AWAITING VERIFICATION</span>
+                <p class="status-subtitle" style="margin-top: 0.5rem;">Transaction reference recorded. Awaiting supervisor/admin reconciliation.</p>
+                <div class="action-row modal-action-row">
+                  <button class="primary wide-btn" id="verify-merchant-now" type="button">Verify &amp; Finalize Sale</button>
+                  <button class="secondary" id="close-merchant-sale" type="button">Done</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. QR PAYMENT PANEL -->
+          <div class="payment-panel" id="pay-panel-qr" hidden>
+            <div class="qr-payment-card">
+              <h4>PAY WITH MOBILE MONEY</h4>
+              <p class="status-subtitle">Scan this dynamic QR code with MTN MoMo App, Airtel Money App, or banking app.</p>
+              <div class="qr-canvas-wrap">
+                <img id="dynamic-qr-image" src="" alt="Dynamic Payment QR Code" />
+              </div>
+              <div class="calc-row">
+                <span class="calc-label">Amount:</span>
+                <strong class="calc-val" id="qr-sale-total">UGX 0</strong>
+              </div>
+              <p class="qr-waiting-text"><span class="status-dot"></span> Waiting for phone scan &amp; payment confirmation...</p>
+              <div class="action-row modal-action-row">
+                <button class="secondary" id="cancel-qr-payment" type="button">Cancel</button>
+                <button class="secondary small" id="check-qr-payment" type="button">Check Payment Status</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="payment-modal-footer">
+          <button class="secondary" id="abort-payment-modal" type="button">Cancel Checkout</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="receipt-print-only" aria-hidden="true"></div>
+    <script src="barcode-scanner.js"></script>
+    <script src="drink-menu.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
